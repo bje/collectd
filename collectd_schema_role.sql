@@ -20,7 +20,7 @@ grant select on pg_stat_activity to collectd;
 create extension IF NOT EXISTS pg_stat_statements WITH SCHEMA collectd;
 alter schema collectd owner to collectd;
 
-CREATE OR REPLACE FUNCTION collectd.get_stat_statements() RETURNS SETOF pg_stat_statements AS
+CREATE OR REPLACE FUNCTION get_stat_statements() RETURNS SETOF pg_stat_statements AS
 $$
   SELECT * FROM pg_stat_statements
   WHERE dbid IN (SELECT oid FROM pg_database WHERE datname = current_database());
@@ -68,10 +68,10 @@ END;
 $$
 LANGUAGE 'plpgsql' SECURITY DEFINER;
 alter function collectd.get_seq_scan_on_large_tables() owner to collectd;
-revoke all on function get_seq_scan_on_large_tables() from public;
-grant execute on function get_seq_scan_on_large_tables() to collectd;
+revoke all on function collectd.get_seq_scan_on_large_tables() from public;
+grant execute on function collectd.get_seq_scan_on_large_tables() to collectd;
 
-drop view IF EXISTS get_seq_scan_on_large_tables;
-create view get_seq_scan_on_large_tables as select * from get_seq_scan_on_large_tables();
+drop view IF EXISTS collectd.get_seq_scan_on_large_tables;
+create view collectd.get_seq_scan_on_large_tables as select * from collectd.get_seq_scan_on_large_tables();
 revoke all on collectd.get_seq_scan_on_large_tables from public;
-grant select on get_seq_scan_on_large_tables to collectd;
+grant select on collectd.get_seq_scan_on_large_tables to collectd;
